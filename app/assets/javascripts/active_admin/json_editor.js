@@ -2,8 +2,13 @@
 //= require jsoneditor/asset/jsonlint/jsonlint.js
 
 ;(function(window, $) {
-  $(function() {
-    $('div.jsoneditor-wrap').each(function(i,wrap){
+  function initializeAllJSONEditors() {
+    $('div.jsoneditor-wrap').each(function(i, wrap) {
+      if ($(wrap).data('jsonEditorInitialized'))
+        return;
+
+      $(wrap).data('jsonEditorInitialized', true);
+
       var fieldset = $(wrap).parents('li:eq(0)');
       var container = $(wrap)[0];
       var textarea = $($(wrap).find('textarea'));
@@ -27,5 +32,11 @@
       };
       editor = new JSONEditor(container, options,JSON.parse(textarea.val()));
     });
-  });
+  }
+
+  window.initializeAllJSONEditors = initializeAllJSONEditors;
+  document.addEventListener('turbolinks:load', initializeAllJSONEditors);
+
+  // On Ready
+  $(initializeAllJSONEditors);
 })(window, jQuery);
